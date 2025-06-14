@@ -29,7 +29,7 @@ def resource_path(relative_path):
     except Exception:
         base_path = os.path.abspath(".")
 
-    return os.path.join(base_path, relative_path)
+    return os.path.join(base_path, 'adversarial-noise', relative_path)
 
 
 def check_memory():
@@ -279,8 +279,10 @@ class GlazeAPP(object):
         self.pushButton.clicked.connect(self.pushButton_handler)
         self.clearButton.clicked.connect(self.clearButton_handler)
         self.outputButton.clicked.connect(self.outputButton_handler)
-        None((lambda : self.protect_images()))
-        None((lambda : self.protect_images(True, **('preview',))))
+        # None((lambda : self.protect_images()))
+        # None((lambda : self.protect_images(True, **('preview',))))
+        lambda: self.protect_images()
+        lambda: self.protect_images(preview=True)
 
     
     def pushButton_handler(self):
@@ -366,13 +368,20 @@ class GlazeAPP(object):
                 self.labelMsg.repaint()
                 self.have_warned = True
                 return None
-            if None(self.img_paths) == 0:
+            if len(self.img_paths) == 0:
                 self.labelMsg.setText('Please select images first.')
                 return None
-            if None.output_dir is None:
+            if self.output_dir is None:
                 self.labelMsg.setText('Please select a output folder. ')
                 return None
-            self.reminder = None()
+            self.reminder = ReminderClock()
+            # if None(self.img_paths) == 0:
+            #     self.labelMsg.setText('Please select images first.')
+            #     return None
+            # if None.output_dir is None:
+            #     self.labelMsg.setText('Please select a output folder. ')
+            #     return None
+            # self.reminder = None()
             cur_intensity = self.sl_intensity.value()
             cur_rq = self.rq_intensity.value()
             if preview:
@@ -429,7 +438,8 @@ class ReminderClock(object):
             self.last_time = cur_time
             self.prev = cur_p
             return None
-        cur_time_gap = None - self.last_time
+        cur_time_gap = cur_time - self.last_time
+        # cur_time_gap = None - self.last_time
         self.time_queue.append(cur_time_gap)
         median_time = np.median(self.time_queue)
         incr = cur_p - self.prev
