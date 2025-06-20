@@ -1,11 +1,8 @@
-import cv2
-import json
-
-from imwatermark import WatermarkEncoder, WatermarkDecoder
-from pydantic import BaseModel
-
-from google.adk.tools import ToolContext
 from google.adk.agents import Agent
+
+from .prompts import return_instructions_root
+from .sub_agents import watermark_agent
+
 
 
 MODEL = 'gemini-1.5-flash-002'
@@ -15,9 +12,9 @@ PROTECTED_PATH = './data/protected'
 root_agent = Agent(
   model=MODEL,
   name="copyright_multiagent",
-  # description="Applies an invisible watermark to an artwork image using robust encoding methods. The watermark includes copyright metadata in JSON format to protect the creator’s rights.",
-  # instruction=invisible_watermark_agent_instruction,
-  # tools=[save_prd, encode_image]
+  global_instruction="You are a Artwork Copyright Protection Multi Agent System.",
+  instruction=return_instructions_root(),
+  sub_agents=[watermark_agent]
 )
 
 
