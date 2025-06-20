@@ -1,18 +1,15 @@
 import cv2
-import json
+import os
 
 from imwatermark import WatermarkEncoder, WatermarkDecoder
 
 from google.adk.tools import ToolContext
 
 
-def encode_image(tool_context: ToolContext)-> str:
-    image_path = tool_context.state.get('image_path')
-    metadata = tool_context.state.get('metadata')
-    if not image_path or not metadata:
-        return "[encode_image] Error: image_path or metadata not found in state."
-
+def encode_image(image_path: str, metadata: str)-> str:
     try:
+        image_path = os.path.abspath( image_path)
+        
         bgr = cv2.imread(image_path)
         if bgr is None:
             raise FileNotFoundError(f"Image not found: {image_path}")
@@ -30,8 +27,7 @@ def encode_image(tool_context: ToolContext)-> str:
         return output_path
     
     except Exception as e:
-        print(f"[encode_image error] {e}")
-        return ""
+        return f"[encode_image error] {e}"
     
     
 # 추후 수정 필요   
@@ -49,8 +45,3 @@ def encode_image(tool_context: ToolContext)-> str:
 #     print('[decode] 완료')
 #     print('raw watermark bytes:', watermark)
 #     print('decoded watermark: ', watermark.decode('utf-8', errors='replace'))
-
-
-def save_state(image_path: str, metadata: str, tool_context: ToolContext):
-    tool_context.state['image_path'] = image_path
-    tool_context.state['metadata'] = json.dumps(metadata)

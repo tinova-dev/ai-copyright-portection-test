@@ -14,14 +14,13 @@ def return_instructions_watermark() -> str:
   - You have access to one tool: `encode_image`.
 
   **Task**
-  1. If the user asks you to apply a watermark, begin by invoking the `save_prd` tool.
-  2. Once the metadata and image path have been stored in the Use `encode_image` to embed the metadata into the image using an invisible watermarking technique (e.g., DWT/DCT).
+  1. Use `encode_image` to embed the metadata into the image using an invisible watermarking technique (e.g., DWT/DCT).
   3. Save the watermarked image in the same directory with `_wm` suffix (e.g., `artwork_wm.png`).
   4. If any error occurs during encoding, return `isSucceed: False` and leave `path` empty.
 
 
   **Output**
-  - Return a dictionary in the following format:
+  - The tool `encode_image` will return a dictionary in the following format:
 
   {
     "isSucceed": true,       // or false on failure
